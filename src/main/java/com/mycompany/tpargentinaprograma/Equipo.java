@@ -15,4 +15,17 @@ public class Equipo {
     public String toString() {
         return "Equipo{" + "nombre='" + nombre + '\'' + '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Equipo equipo = (Equipo) o;
+        return nombre != null ? nombre.equals(equipo.nombre) : equipo.nombre == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return nombre != null ? nombre.hashCode() : 0;
+    }
 }
