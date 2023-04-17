@@ -10,12 +10,17 @@ public class Pronostico {
     private String participante;
     private Partido partido;
     private ResultadoEnum resultado;
+    private int ronda;
+    private static int rondaActual = 0;
+    private static int totalAciertosRonda = 0;
+    private static int totalAciertosFases=0;
 
-    public Pronostico(String participante, Partido partido, ResultadoEnum resultado, int idPartido) {
+    public Pronostico(String participante, Partido partido, ResultadoEnum resultado, int idPartido, int ronda) {
         this.participante = participante;
         this.partido = partido;
         this.resultado = resultado;
         this.idPartido = idPartido;
+        this.ronda = ronda;
     }
 
     public String getParticipante() {
@@ -34,8 +39,38 @@ public class Pronostico {
         return idPartido;
     }
 
+    public int getRonda() {
+        return ronda;
+    }
+
     public int puntos() {
-        return partido.resultado(partido.getEquipo1()) == resultado ? 1 : 0;
+        int aciertoPuntos = 1;
+        int cantidadDePartidosRonda = 2;
+        int cantidadDeRondasFase=2;
+        int recompensaRonda = 5;
+        int recompensaFases = 10;
+
+        if (partido.getRonda() != rondaActual) {
+            totalAciertosRonda = 0;
+            rondaActual = partido.getRonda();
+            if(rondaActual==1){
+                totalAciertosFases=0;
+            }
+        }
+        
+        if (partido.resultado(partido.getEquipo1()) == resultado) {
+            totalAciertosRonda++;
+            if (totalAciertosRonda == cantidadDePartidosRonda) {
+                totalAciertosFases++;
+                if(totalAciertosFases%cantidadDeRondasFase==0){
+                    return aciertoPuntos + recompensaRonda + recompensaFases;
+                }
+                return aciertoPuntos + recompensaRonda;
+            }else{
+                return aciertoPuntos;
+            }
+        }
+        return 0;
     }
 
     public static List<Pronostico> createFromCsvList(List<PronosticoCsv> pronosticosCsv, List<Partido> partidos) {
@@ -45,7 +80,7 @@ public class Pronostico {
         for (PronosticoCsv pronosticoCsv : pronosticosCsv) {
             Partido partido = partidoById.get(pronosticoCsv.getIdPartido());
             ResultadoEnum resultado = ResultadoEnum.fromCsvString(pronosticoCsv.getGana1(), pronosticoCsv.getEmpata(), pronosticoCsv.getGana2());
-            Pronostico pronostico = new Pronostico(pronosticoCsv.getParticipante(), partido, resultado, pronosticoCsv.getIdPartido());
+            Pronostico pronostico = new Pronostico(pronosticoCsv.getParticipante(), partido, resultado, pronosticoCsv.getIdPartido(), partido.getRonda());
             pronosticos.add(pronostico);
         }
         return pronosticos;

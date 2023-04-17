@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class App {
+
     public static void main(String[] args) {
         try {
             List<ResultadoCsv> resultadosCsv = new CsvToBeanBuilder<ResultadoCsv>(new FileReader("src/main/resources/resultados.csv"))
@@ -20,6 +21,7 @@ public class App {
 
             Map<String, Integer> puntosPorParticipante = new HashMap<>();
             for (Pronostico pronostico : pronosticos) {
+                
                 String participante = pronostico.getParticipante();
                 int puntos = pronostico.puntos();
                 puntosPorParticipante.put(participante, puntosPorParticipante.getOrDefault(participante, 0) + puntos);
