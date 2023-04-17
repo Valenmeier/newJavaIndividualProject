@@ -1,9 +1,14 @@
 package com.mycompany.tpargentinaprograma;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Partido {
+
     private int id;
     private int ronda;
     private Equipo equipo1;
@@ -11,14 +16,15 @@ public class Partido {
     private int golesEquipo1;
     private int golesEquipo2;
 
-    public Partido(int id,Equipo equipo1, Equipo equipo2, int golesEquipo1, int golesEquipo2, int ronda) {
-        this.id = id;
-        this.equipo1 = equipo1;
-        this.equipo2 = equipo2;
-        this.golesEquipo1 = golesEquipo1;
-        this.golesEquipo2 = golesEquipo2;
-        this.ronda=ronda;
-    }
+   public Partido(int id, int ronda, Equipo equipo1, int golesEquipo1, Equipo equipo2, int golesEquipo2) {
+    this.id = id;
+    this.equipo1 = equipo1;
+    this.equipo2 = equipo2;
+    this.golesEquipo1 = golesEquipo1;
+    this.golesEquipo2 = golesEquipo2;
+    this.ronda = ronda;
+}
+
 
     public int getId() {
         return id;
@@ -39,7 +45,8 @@ public class Partido {
     public int getGolesEquipo2() {
         return golesEquipo2;
     }
-    public int getRonda(){
+
+    public int getRonda() {
         return ronda;
     }
 
@@ -53,13 +60,20 @@ public class Partido {
         }
     }
 
-    public static List<Partido> createFromCsvList(List<ResultadoCsv> resultadosCsv) {
+
+    public static List<Partido> fetchFromDatabase(Connection connection) throws SQLException {
         List<Partido> partidos = new ArrayList<>();
-        for (ResultadoCsv resultadoCsv : resultadosCsv) {
-            Equipo equipo1 = new Equipo(resultadoCsv.getEquipo1());
-            Equipo equipo2 = new Equipo(resultadoCsv.getEquipo2());
-            Partido partido = new Partido(resultadoCsv.getId(), equipo1, equipo2, resultadoCsv.getCantGoles1(), resultadoCsv.getCantGoles2(),resultadoCsv.getRonda());
-            partidos.add(partido);
+        String query = "SELECT * FROM tpargentinaprograma.resultados";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query); ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("ID");
+                int ronda = resultSet.getInt("Ronda");
+                Equipo equipo1 = new Equipo(resultSet.getString("Equipo_1"));
+                int goles_equipo1 = resultSet.getInt("Cant_Goles_1");
+                int goles_equipo2 = resultSet.getInt("Cant_Goles_2");
+                Equipo equipo2 = new Equipo(resultSet.getString("Equipo_2"));
+                partidos.add(new Partido(id, ronda, equipo1, goles_equipo1, equipo2, goles_equipo2));
+            }
         }
         return partidos;
     }
