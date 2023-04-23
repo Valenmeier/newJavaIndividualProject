@@ -9,12 +9,12 @@ import java.util.List;
 
 public class Partido {
 
-    private int id;
-    private int ronda;
-    private Equipo equipo1;
-    private Equipo equipo2;
-    private int golesEquipo1;
-    private int golesEquipo2;
+    private final int id;
+    private final int ronda;
+    private final Equipo equipo1;
+    private final Equipo equipo2;
+    private final int golesEquipo1;
+    private final int golesEquipo2;
 
    public Partido(int id, int ronda, Equipo equipo1, int golesEquipo1, Equipo equipo2, int golesEquipo2) {
     this.id = id;

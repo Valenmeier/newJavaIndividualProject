@@ -8,7 +8,7 @@ public enum ResultadoEnum {
 
     public static ResultadoEnum fromCsvString(String gana1, String empata, String gana2) {
         if ("X".equals(gana1)) {
-            return GANADOR;
+            return GANADOR ;
         } else if ("X".equals(empata)) {
             return EMPATE;
         } else if ("X".equals(gana2)) {
