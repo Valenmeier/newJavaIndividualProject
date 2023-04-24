@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public class App {
-
     public static void main(String[] args) {
         try (Connection connection = Database.getConnection()) {
             List<Partido> partidos = Partido.fetchFromDatabase(connection);
@@ -17,8 +16,8 @@ public class App {
 
             for (Pronostico pronostico : pronosticos) {
                 String participante = pronostico.getParticipante();
-
                 int puntos = pronostico.puntos();
+                
                 puntosPorParticipante.put(participante, puntosPorParticipante.getOrDefault(participante, 0) + puntos);
             }
             for (Map.Entry<String, Integer> entry : puntosPorParticipante.entrySet()) {

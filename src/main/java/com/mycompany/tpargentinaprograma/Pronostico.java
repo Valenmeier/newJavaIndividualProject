@@ -6,9 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 public class Pronostico {
-
     private int idPartido;
     private final String participante;
     private final Partido partido;
@@ -17,6 +19,9 @@ public class Pronostico {
     private static int rondaActual = 0;
     private static int totalAciertosRonda = 0;
     private static int totalAciertosFases = 0;
+    private static int aciertoPuntos;
+    private static int recompensaRonda;
+    private static int recompensaFases;
 
     public Pronostico(String participante, Partido partido, ResultadoEnum resultado) {
         this.participante = participante;
@@ -24,6 +29,10 @@ public class Pronostico {
         this.resultado = resultado;
         this.idPartido = idPartido;
         this.ronda = ronda;
+    }
+
+    static {
+        loadConfig();
     }
 
     public String getParticipante() {
@@ -47,11 +56,8 @@ public class Pronostico {
     }
 
     public int puntos() {
-        int aciertoPuntos = 1;
         int cantidadDePartidosRonda = 2;
         int cantidadDeRondasFase = 2;
-        int recompensaRonda = 5;
-        int recompensaFases = 10;
 
         if (partido.getRonda() != rondaActual) {
             totalAciertosRonda = 0;
@@ -72,7 +78,7 @@ public class Pronostico {
             } else {
                 return aciertoPuntos;
             }
-        } 
+        }
         return 0;
     }
 
@@ -92,11 +98,22 @@ public class Pronostico {
                 String gana2 = resultSet.getString("Gana_2");
 
                 ResultadoEnum resultado = ResultadoEnum.fromCsvString(gana1, empata, gana2);
-                
-                
+
                 pronosticos.add(new Pronostico(participante, partido, resultado));
             }
         }
         return pronosticos;
+    }
+
+    public static void loadConfig() {
+        Properties properties = new Properties();
+        try (FileInputStream fis = new FileInputStream("config.properties")) {
+            properties.load(fis);
+            aciertoPuntos = Integer.parseInt(properties.getProperty("aciertoPuntos"));
+            recompensaRonda = Integer.parseInt(properties.getProperty("recompensaRonda"));
+            recompensaFases = Integer.parseInt(properties.getProperty("recompensaFases"));
+        } catch (IOException e) {
+            System.err.println("Error al cargar el archivo de configuración.");
+        }
     }
 }

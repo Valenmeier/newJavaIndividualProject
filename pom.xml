@@ -37,9 +37,10 @@
 
     <build>
         <plugins>
+        
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
+                <artifactId>maven-shade-plugin</artifactId>  <!--Configurado para crear un archivo JAR ejecutable que contiene todas las dependencias, y para especificar la clase principal del proyecto.-->
                 <version>3.2.4</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -70,7 +71,7 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <artifactId>maven-surefire-plugin</artifactId>  <!--Configurado para ejecutar pruebas unitarias durante la fase de construcción del proyecto.-->
                 <version>2.22.0</version>
             </plugin>
         </plugins>

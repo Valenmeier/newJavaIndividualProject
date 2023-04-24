@@ -1,1 +1,6 @@
-.netbeans_automatic_build
+com\mycompany\tpargentinaprograma\App.class
+com\mycompany\tpargentinaprograma\Equipo.class
+com\mycompany\tpargentinaprograma\Pronostico.class
+com\mycompany\tpargentinaprograma\ResultadoEnum.class
+com\mycompany\tpargentinaprograma\Database.class
+com\mycompany\tpargentinaprograma\Partido.class
